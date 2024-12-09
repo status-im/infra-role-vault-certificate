@@ -1,0 +1,21 @@
+---
+- name: 'Vault PKI | Generating certificate'
+  uri:
+    url: '{{ vault_addr }}/v1/{{ vault_pki_engine }}/issue/{{ cert_role | mandatory }}'
+    method:  'POST'
+    return_content: yes
+    headers: '{{ certs_vault_headers }}'
+    body:
+      common_name:  '{{ cert_common_name | mandatory }}'
+      ip_sans:      '{{ cert_ip_sans | mandatory }}'
+      alt_names:    '{{ cert_domain_sans | mandatory }}'
+    body_format:    'json'
+    ca_path:      '{{ cert_vault_ca_path }}'
+    client_cert:  '{{ cert_vault_client_cert_path }}'
+    client_key:   '{{ cert_vault_client_key_path }}'
+  register: new_certificate
+
+- set_fact:
+      certificate: '{{ new_certificate.json.data.certificate }}'
+      private_key: '{{ new_certificate.json.data.private_key }}'
+  no_log: true

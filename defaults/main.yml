@@ -1,0 +1,42 @@
+---
+vault_addr:             '{{ lookup("ansible.builtin.env", "VAULT_ADDR") }}'
+vault_pki_engine:       'pki'
+cert_vault_ca_path:          '/certs/vault-ca.crt'
+cert_vault_client_cert_path: '/certs/vault-client.crt'
+cert_vault_client_key_path:  '/certs/vault-client.key'
+
+certs_vault_headers:
+  X-Vault-Token: '{{ lookup("ansible.builtin.env", "VAULT_TOKEN")}}'
+  Content-Type: 'application/json'
+
+## Option for role:
+cert_role:
+cert_role_issuer_name:
+cert_role_info:
+  organization:               'IFT Studio Pte Ltd'
+  unit:                       'Infra'
+  country:                    'SG'
+cert_role_allow_domains:      ['{{ cert_common_name }}']
+cert_role_allow_bare_domain:  True
+cert_role_allow_subdomains:   True
+cert_role_allow_any_name:     True
+cert_role_max_ttl:            '365d'
+
+## Commun option:
+cert_certificate_path: # '/certs/application.crt'
+cert_private_key_path: # '/certs/application.key'
+cert_vault_storing_path: #'/env/stage/service/hostname'
+cert_common_name:
+cert_info: '{{ cert_role_info }}'
+
+## Option for CA
+cert_ca_issuer_name:
+cert_ca_ttl: '1825d'
+
+  ## Option for simple certificate
+cert_common_name:
+cert_ip_sans:
+cert_domain_sans:
+
+cert_user: 'root'
+cert_group: 'root'

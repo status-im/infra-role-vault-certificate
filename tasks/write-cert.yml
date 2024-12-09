@@ -1,0 +1,17 @@
+---
+- name: 'Vault PKI | Write the certificate'
+  copy:
+    content: '{{ certificate }}'
+    dest: '{{ cert_certificate_path }}'
+    owner: '{{ cert_user }}'
+    group: '{{ cert_group }}'
+  when: certificate | length > 0
+
+- name: 'Vault PKI | Write the private_key'
+  copy:
+    content: '{{ private_key }}'
+    dest: '{{ cert_private_key_path }}'
+    owner: '{{ cert_user }}'
+    group: '{{ cert_group }}'
+  when: (private_key | length > 0) and not cert_generate_ca
+  no_log: true
