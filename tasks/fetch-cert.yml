@@ -13,6 +13,7 @@
 - set_fact:
     certificate: '{{ response.json.data.data.certificate }}'
     private_key: '{{ response.json.data.data.private_key }}'
+    expired: '{{ (response.json.data.data.expiration_date | default(1745829694) | int) < ( ansible_date_time.epoch |int)}}'
       #no_log: true
   when: response.status == 200
 

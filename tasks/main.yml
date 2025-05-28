@@ -6,12 +6,12 @@
   when: not cert_generate_ca and not cert_existing
 - import_tasks: 'generate-cert.yml'
   tags: ['role::vault-cert', 'role::vault-cert:gen-cert']
-  when: not cert_generate_ca and not cert_existing
+  when: not cert_generate_ca and (not cert_existing or expired)
 - import_tasks: 'generate-ca.yml'
   tags: ['role::vault-cert', 'role::vault-cert:gen-ca']
-  when: cert_generate_ca and not cert_existing
+  when: cert_generate_ca and (not cert_existing or expired)
 - import_tasks: 'save-cert.yml'
   tags: ['role::vault-cert', 'role::vault-cert:gen-ca']
-  when: not cert_existing
+  when: not cert_existing or expired
 - import_tasks: 'write-cert.yml'
   tags: ['role::vault-cert', 'role::vault-cert:gen-ca']

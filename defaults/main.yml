@@ -9,6 +9,10 @@ certs_vault_headers:
   X-Vault-Token: '{{ lookup("ansible.builtin.env", "VAULT_TOKEN")}}'
   Content-Type: 'application/json'
 
+certs_vault_headers_patch:
+  X-Vault-Token: '{{ lookup("ansible.builtin.env", "VAULT_TOKEN")}}'
+  Content-Type: 'application/merge-patch+json'
+
 ## Option for role:
 cert_role:
 cert_role_issuer_name:
