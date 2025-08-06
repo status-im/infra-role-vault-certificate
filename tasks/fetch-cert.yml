@@ -1,15 +1,19 @@
 ---
-- name: 'Vault PKI | Fetch certificate if exist'
-  uri:
-    url:         '{{ vault_addr }}/v1/secret/data/{{ cert_vault_storing_path | mandatory }}'
-    method:      'GET'
-    headers:     '{{ certs_vault_headers }}'
-    ca_path:     '{{ cert_vault_ca_path }}'
-    client_cert: '{{ cert_vault_client_cert_path }}'
-    client_key:  '{{ cert_vault_client_key_path }}'
-    status_code: [200, 404]
-  register: response
-
+- block:
+  - name: 'Vault PKI | Fetch certificate if exist'
+    uri:
+      url:         '{{ vault_addr }}/v1/secret/data/{{ cert_vault_storing_path | mandatory }}'
+      method:      'GET'
+      headers:     '{{ certs_vault_headers }}'
+      ca_path:     '{{ cert_vault_ca_path }}'
+      client_cert: '{{ cert_vault_client_cert_path }}'
+      client_key:  '{{ cert_vault_client_key_path }}'
+      status_code: [200, 404]
+    register: response
+  rescue:
+    # If the Vault Certs don't exist or are invalid, the API will return `-1`
+    - fail:
+        msg: 'Call to Vault API not working, verify the certificate in /certs on the host'
 - set_fact:
     certificate: '{{ response.json.data.data.certificate }}'
     private_key: '{{ response.json.data.data.private_key }}'
